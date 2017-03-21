@@ -123,8 +123,8 @@ def fs_calc(args):
 
 @my_bot.command(pass_context=True)
 async def fs(ctx, *args):
-    #  if not ((ctx.message.channel.name == "bot") or ctx.message.channel.is_private):
-    #    return
+    if not ((ctx.message.channel.name == "bot") or ctx.message.channel.is_private):
+        return
 
     member = ctx.message.author
 
