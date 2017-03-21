@@ -4,7 +4,7 @@ from discord.ext.commands import Bot
 import config
 
 
-my_bot = Bot(command_prefix="!")
+my_bot = Bot(command_prefix=config.BOT_COMMAND_PREFIX)
 
 #  failstack and probabilty table from https://imgur.com/a/D5ngu
 fs_table = {'acc': {1: {'Base': 15, 'perFS': 1.5, 'maxFS': 25},  # to pri
@@ -123,7 +123,8 @@ def fs_calc(args):
 
 @my_bot.command(pass_context=True)
 async def fs(ctx, *args):
-    if not ((ctx.message.channel.name == "bot") or ctx.message.channel.is_private):
+    if (ctx.message.channel.name not in config.CHANNEL_LIST) and not ctx.message.channel.is_private:
+        print(ctx.message.channel.name + " not in " + str(config.CHANNEL_LIST))
         return
 
     member = ctx.message.author
@@ -144,4 +145,8 @@ async def fs(ctx, *args):
     return await my_bot.say(embed=fs_calc(args))
 
 
-my_bot.run(config.token)
+@my_bot.event
+async def on_ready():
+    print("Link to add bot: https://discordapp.com/oauth2/authorize?client_id={0}&scope=bot&permissions=0".format(my_bot.user.id))
+
+my_bot.run(config.TOKEN)
