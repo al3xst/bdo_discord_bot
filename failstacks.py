@@ -122,21 +122,27 @@ class Failstacks():
     @commands.command(pass_context=True)
     async def fs(self, ctx, *args):
         if (ctx.message.channel.name not in config.CHANNEL_LIST) and not ctx.message.channel.is_private:
-            print(ctx.message.channel.name + " not in " + str(config.CHANNEL_LIST))
+            #  print(ctx.message.channel.name + " not in " + str(config.CHANNEL_LIST))
             return
 
         member = ctx.message.author
 
-        if len(args) < 1 or len(args) > 2:
-            return await self.bot.say(self.fs_help(member))
-
         try:
             ia = int(args[0])
-            ib = int(args[0])
+            ib = 0
+            if len(args) == 2:
+                ib = int(args[1])
             if ia < 0 or ia > 19:
                 raise ValueError()
-        except ValueError:
-            return await self.bot.say(self.fs_help(member))
+            if ib < 0 or ib > 999:
+                raise ValueError()
+        except (ValueError, IndexError):
+            try:
+                if not ctx.message.channel.is_private:
+                    await self.bot.delete_message(ctx.message)
+            except discord.Forbidden:
+                print("I have no rights, to remove messages in this channel: {}".format(ctx.message.channel.name))
+            return await self.bot.send_message(member, self.fs_help(member))
 
         await self.bot.say("{0.mention}".format(member))
         await self.bot.say(embed=self.fs_calc(args))
