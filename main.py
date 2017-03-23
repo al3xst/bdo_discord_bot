@@ -23,7 +23,7 @@ async def on_command_error(error, ctx):
     except discord.Forbidden:
         print("I have no rights, to remove messages in this channel: {}".format(ctx.message.channel.name))
     return await bot.send_message(ctx.message.author,
-                                  "Command {} not found. Use `!fs help` to list all available commands".format(error))
+                                  "{}. Use `!fs help` to list all available commands".format(error))
 
 
 @bot.event
