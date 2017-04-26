@@ -9,7 +9,7 @@ bot = commands.Bot(command_prefix=config.BOT_COMMAND_PREFIX)
 bot.remove_command("help")  # we will write our own help command
 
 # this specifies what extensions to load when the bot starts up
-startup_extensions = ["failstacks", "mycalendar"]
+startup_extensions = ["failstacks"]
 
 
 # Log everything to discord.log
