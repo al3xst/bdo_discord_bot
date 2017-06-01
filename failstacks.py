@@ -3,9 +3,14 @@ from discord.ext import commands
 
 import config
 
+
 class Failstacks():
     def __init__(self, bot):
         self.bot = bot
+
+        self.help_description = "Failstack Rechner"  # Description of our extension, for our help command
+        self.help_commandname = "fs"  # Commandname, for our help command
+        self.help_explain = "Syntax: `fs <aktuelles +> <Failstacks>`\n<aktuelles +>: von 0 bis 19\t<Failstacks>: von 0 bis 999"  # Short explenation how to use this command
 
     #  failstack and probabilty table from https://imgur.com/a/D5ngu
     fs_table = {'acc': {1: {'Base': 15, 'perFS': 1.5, 'maxFS': 25},  # to pri
@@ -121,10 +126,6 @@ class Failstacks():
 
     @commands.command(pass_context=True)
     async def fs(self, ctx, *args):
-        if (ctx.message.channel.name not in config.CHANNEL_LIST) and not ctx.message.channel.is_private:
-            #  print(ctx.message.channel.name + " not in " + str(config.CHANNEL_LIST))
-            return
-
         member = ctx.message.author
 
         try:

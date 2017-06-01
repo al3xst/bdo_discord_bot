@@ -9,7 +9,7 @@ bot = commands.Bot(command_prefix=config.BOT_COMMAND_PREFIX)
 bot.remove_command("help")  # we will write our own help command
 
 # this specifies what extensions to load when the bot starts up
-startup_extensions = ["failstacks"]
+startup_extensions = ["failstacks", "mycalendar"]
 
 
 # Log everything to discord.log
@@ -37,6 +37,29 @@ async def on_command_error(error, ctx):
 @bot.event
 async def on_ready():
     print("Link to add bot: https://discordapp.com/oauth2/authorize?client_id={0}&scope=bot&permissions=0".format(bot.user.id))
+
+#  For a voting plugin
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user.id == bot.user.id:  # ignore self
+        return
+
+    if (reaction.message.channel.name not in config.CHANNEL_LIST) and not reaction.message.channel.is_private:  # ignore all other channels
+        return
+
+    if reaction.emoji[0] != '👍' and reaction.emoji[0] != '👎':  # remove unwanted reactions
+        try:
+            await bot.remove_reaction(reaction.message, reaction.emoji, user)
+        except Exception as e:
+            exc = '{}: {}'.format(type(e).__name__, e)
+            print('Failed {}'.format(exc))
+        return
+
+    # remove the opposite reaction from the user, if available
+    if reaction.emoji[0] == '👍':
+        await bot.remove_reaction(reaction.message, '👎', user)
+    else:
+        await bot.remove_reaction(reaction.message, '👍', user)
 
 
 @bot.event
